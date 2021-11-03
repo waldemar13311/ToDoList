@@ -9,7 +9,6 @@ using ToDoList.Models;
 
 namespace ToDoList.Controllers
 {
-    [Authorize]
     public class HomeController : Controller
     {
         private UserManager<User> _userManager;
