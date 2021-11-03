@@ -27,5 +27,15 @@ namespace ToDoList.Controllers
 
             return View();
         }
+
+        public IActionResult Index2()
+        {
+            var user = _userManager.GetUserName(User);
+
+            ViewBag.Title = $"Hello, {user}";
+
+
+            return View();
+        }
     }
 }
