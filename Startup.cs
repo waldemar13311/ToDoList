@@ -43,6 +43,8 @@ namespace ToDoList
                 .AddEntityFrameworkStores<UserDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddSingleton<IToDoItemProvider, ToDoItemMemoryProvider>();
+
             services.AddMvc(options => options.EnableEndpointRouting = false);
         }
 

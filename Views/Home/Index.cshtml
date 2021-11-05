@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<ToDoItem>
+
+@{
     Layout = null;
 }
 
@@ -116,14 +118,42 @@
 </head>
 <body>
 
-
 <div class="container">
+    <div class="row align-items-start">
+        <div class="col align-self-start">
+            @if (ViewBag.UserName != null)
+            {
+                <nav>
+                    <h1>@ViewBag.UserName</h1>
+                </nav>
+            }
+            else
+            {
+                <nav>
+                    <h1>Demo mode</h1>
+                </nav>
+                <span>Log In or Sign Up in your account to save to do items</span>
+            }
+        </div>
 
-    <div class="row">
         <div class="col">
             <div class="p-1 h1 text-dark text-center mx-auto">
                 <i class="fa fa-check bg-dark text-white rounded p-2"></i>
                 <u>ToDoList</u>
+            </div>
+        </div>
+        
+        <div class="p-2 m-1 col align-self-end">
+            <div class="form-inline float-end">
+                @if (ViewBag.UserName != null)
+                {
+                    <a class="btn btn-outline-dark" asp-controller="Home" asp-action="LogOut">Log Out</a>
+                }
+                else
+                {
+                    <a class="btn btn-outline-dark" asp-controller="Account" asp-action="Login">Log In</a>
+                    <a class="btn btn-outline-secondary" asp-controller="Registration" asp-action="Index">Sign Up</a>
+                }
             </div>
         </div>
     </div>
@@ -132,40 +162,60 @@
         <div class="card">
             <div class="card-body">
 
-                <form>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col">
-                                <input type="text" class="form-control" placeholder="New Task...">
-                            </div>
-                            <div class="col-md-auto">
-                                <button class="btn btn-dark">Add</button>
-                            </div>
-                        </div>
-                    </div>
+                <form method="post" asp-controller="Home" asp-action="AddToDoItem">
+                    @Html.Partial("NewToDoItemAdd", new ToDoItem())
                 </form>
-                
-                <ul class="nav nav-pills todo-nav">
-                    <li role="presentation" class="nav-item"><a href="#" class="nav-link text-dark text-decoration-underline">All</a></li>
-                    <li role="presentation" class="nav-item"><a href="#" class="nav-link text-dark text-decoration-underline">Active</a></li>
-                    <li role="presentation" class="nav-item"><a href="#" class="nav-link text-dark text-decoration-underline">Completed</a></li>
-                </ul>
-                
-                <div class="todo-list">
+                    <ul class="nav nav-pills todo-nav">
+                        <li role="presentation" class="nav-item"><a asp-action="AllToDoItems" class="nav-link text-dark text-decoration-underline">All</a></li>
+                        <li role="presentation" class="nav-item"><a asp-action="OnlyActiveToDoItems" class="nav-link text-dark text-decoration-underline">Active</a></li>
+                        <li role="presentation" class="nav-item"><a asp-action="OnlyCompletedToDoItems" class="nav-link text-dark text-decoration-underline">Completed</a></li>
+                    </ul>
 
-                    <div class="todo-item">
-                        <div class="checker">
-                            <input type="checkbox">
+                    <div class="todo-list">
+                        
+                        @foreach (var toDoItem in Model)
+                        {
+                        <div class="todo-item">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-1 col-lg-auto">
+                                        <form asp-action="ChangeToDoItemStatus" method="post">
+                                            <div class="checker">
+                                                <input type="hidden" name="Id" value="@toDoItem.Id" />
+                                                <input type="checkbox" checked="@toDoItem.IsCompleted" onclick="this.parentNode.parentNode.submit()">
+                                            </div>
+                                        </form>
+                                    </div>
+                                    
+                                    @if (ViewBag.EditId != null && toDoItem.Id == ViewBag.EditId)
+                                    {
+                                        @Html.Partial("ToDoItemEdit", toDoItem)
+                                    }
+                                    else
+                                    {
+                                        <div class="col">
+                                            @{
+                                                var style = @toDoItem.IsCompleted ? "font-size: 1.2em; text-decoration: line-through;" : "font-size: 1.2em;";
+                                            }
+                                            <span style="@style">@toDoItem.Item</span>
+                                        </div>
+
+                                        <div class="col col-lg-auto">
+                                            <a asp-action="EditToDoItem" asp-route-id="@toDoItem.Id" ><i class="fas fa-edit" style="color: #212529; font-size: 1.2em"></i></a>
+                                        </div>
+
+                                        <div class="col col-lg-auto">
+                                            <form asp-action="DeleteToDoItem" method="post">
+                                                <input type="hidden" name="Id" value="@toDoItem.Id"/>
+                                                <a onclick="this.parentNode.submit()" style="cursor: pointer"><i class="fas fa-times" style="color: #212529; font-size: 1.2em"></i></a>
+                                            </form>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
                         </div>
-                        <span style="font-size: 1.2em">Create theme</span>
-                        <div class="float-end">
-                            <a href="" style="margin-right: 15px"><i class="fas fa-edit" style="color: #212529; font-size: 1.2em"></i></a>
-                            <a href=""><i class="fas fa-times" style="color: #212529; font-size: 1.2em"></i></a>
-                        </div>
+                        }
                     </div>
-
-                </div>
-
             </div>
         </div>
     </div>

@@ -34,7 +34,7 @@ namespace ToDoList.Controllers
                     UserName = model.Login,
                     Email = model.Email
                 };
-
+                
                 var result = await userManager.CreateAsync(newUser, model.Password);
                 
                 if (result.Succeeded)

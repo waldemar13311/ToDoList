@@ -1,0 +1,15 @@
+﻿@model ToDoItem
+
+<form id="editToDoItemForm" class="col" asp-action="EditToDoItem" method="post">
+    <input type="hidden" asp-for="Id"/>
+    <input asp-for="Item" type="text" class="form-control">
+</form>
+
+    <div class="col col-lg-auto">
+        <a onclick="getElementById('editToDoItemForm').submit()" style="cursor: pointer"><i class="far fa-save" style="color: #212529; font-size: 1.2em"></i></a>
+    </div>
+
+    <div class="col col-lg-auto">
+        <a asp-action="Index"><i class="fa fa-ban" style="color: #212529; font-size: 1.2em"></i></a>
+    </div>
+        
