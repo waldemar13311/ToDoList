@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\images\icons\" />
+    <Folder Include="gif\" />
   </ItemGroup>
 
 </Project>
