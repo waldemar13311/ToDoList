@@ -166,9 +166,36 @@
                     @Html.Partial("NewToDoItemAdd", new ToDoItem())
                 </form>
                     <ul class="nav nav-pills todo-nav">
-                        <li role="presentation" class="nav-item"><a asp-action="AllToDoItems" class="nav-link text-dark text-decoration-underline">All</a></li>
-                        <li role="presentation" class="nav-item"><a asp-action="OnlyActiveToDoItems" class="nav-link text-dark text-decoration-underline">Active</a></li>
-                        <li role="presentation" class="nav-item"><a asp-action="OnlyCompletedToDoItems" class="nav-link text-dark text-decoration-underline">Completed</a></li>
+                        <li role="presentation" class="nav-item">
+                            @if (ViewBag.ListState == ListState.All)
+                            {
+                                <a asp-action="AllToDoItems" class="btn btn-secondary">All</a>
+                            }
+                            else
+                            {
+                                <a asp-action="AllToDoItems" class="nav-link text-dark text-decoration-underline">All</a>
+                            }
+                        </li>
+                        <li role="presentation" class="nav-item">
+                            @if (ViewBag.ListState == ListState.Active)
+                            {
+                                <a asp-action="OnlyActiveToDoItems" class="btn btn-secondary">Active</a>
+                            }
+                            else
+                            {
+                                <a asp-action="OnlyActiveToDoItems" class="nav-link text-dark text-decoration-underline">Active</a>
+                            }
+                        </li>
+                        <li role="presentation" class="nav-item">
+                            @if (ViewBag.ListState == ListState.Completed)
+                            {
+                                <a asp-action="OnlyCompletedToDoItems" class="btn btn-secondary">Completed</a>
+                            }
+                            else
+                            {
+                                <a asp-action="OnlyCompletedToDoItems" class="nav-link text-dark text-decoration-underline">Completed</a>
+                            }
+                        </li>
                     </ul>
 
                     <div class="todo-list">

@@ -8,7 +8,7 @@ namespace ToDoList.Models
 {
     public class ToDoItemMemoryProvider : IToDoItemProvider
     {
-        private static List<ToDoItem> _toDoItems = new List<ToDoItem>();
+        private static readonly List<ToDoItem> _toDoItems = new List<ToDoItem>();
 
         public void AddToDoItem(ToDoItem newItem)
         {
@@ -32,10 +32,10 @@ namespace ToDoList.Models
             _toDoItems[i].IsCompleted = newStatus;
         }
 
-        public bool DeleteDoItem(long id)
+        public void DeleteDoItem(long id)
         {
             int i = Convert.ToInt32(id);
-            return _toDoItems.Remove(_toDoItems[i]);
+            _toDoItems.Remove(_toDoItems[i]);
         }
 
         public IEnumerable<ToDoItem> ToDoItems
@@ -46,6 +46,11 @@ namespace ToDoList.Models
                 _toDoItems.ForEach( i => i.Id = counter++);
                 return _toDoItems.AsEnumerable();
             }
+        }
+
+        public void Clear()
+        {
+            _toDoItems.Clear();
         }
     }
 }

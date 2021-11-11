@@ -45,10 +45,8 @@ namespace ToDoList
                 .AddEntityFrameworkStores<UserDbContext>()
                 .AddDefaultTokenProviders();
 
-            //services.AddTransient<IToDoItemProvider, ToDoItemMsSqlProvider>();
-
             services.AddTransient<ProviderFactory>();
-            //
+
             services
                 .AddTransient<ToDoItemMemoryProvider>()
                 .AddTransient<IToDoItemProvider, ToDoItemMemoryProvider>(s => s.GetService<ToDoItemMemoryProvider>());
@@ -56,11 +54,6 @@ namespace ToDoList
             services
                 .AddTransient<ToDoItemMsSqlProvider>()
                 .AddTransient<IToDoItemProvider, ToDoItemMsSqlProvider>(s => s.GetService<ToDoItemMsSqlProvider>());
-
-            //services.AddTransient<IToDoItemProvider, ToDoItemMsSqlProvider>();
-
-            //services.AddTransient<IToDoItemProvider, ToDoItemMainProvider>();
-            //services.AddSingleton<IToDoItemProvider, ToDoItemMemoryProvider>();
 
             services.AddMvc(options => options.EnableEndpointRouting = false);
         }

@@ -11,7 +11,7 @@ namespace ToDoList.Models
         void AddToDoItem(ToDoItem newItem);
         void EditToDoItemMessage(long id, string newMessage);
         void ChangeStatus(long id);
-        bool DeleteDoItem(long id);
+        void DeleteDoItem(long id);
         IEnumerable<ToDoItem> ToDoItems { get; }
     }
 }

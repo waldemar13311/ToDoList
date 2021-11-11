@@ -17,7 +17,7 @@ namespace ToDoList.Controllers
         private readonly ProviderFactory _providerFactory;
 
         private static ListState _listState = ListState.All;
-        private static string _typeOfModeDataSaver = "memory";
+        private static TypeOfToDoItemProvider _typeOfToDoItemProvider = TypeOfToDoItemProvider.Memory;
 
         public HomeController(
             UserManager<User> userManager, 
@@ -34,6 +34,10 @@ namespace ToDoList.Controllers
         public IActionResult LogOut()
         {
             _signInManager.SignOutAsync();
+            // Clear the array in memory
+            ((ToDoItemMemoryProvider)_providerFactory.GetProvider(TypeOfToDoItemProvider.Memory)).Clear();
+            _listState = ListState.All;
+
             return RedirectToAction("Index");
         }
 
@@ -44,32 +48,32 @@ namespace ToDoList.Controllers
             if (user != null)
             {
                 ViewBag.UserName = user;
-                _typeOfModeDataSaver = "mssql";
-                ((ToDoItemMsSqlProvider)(_providerFactory.GetProvider(_typeOfModeDataSaver))).SetUserId(_userManager.GetUserId(User));
+                _typeOfToDoItemProvider = TypeOfToDoItemProvider.MsSql;
+                ((ToDoItemMsSqlProvider)(_providerFactory.GetProvider(_typeOfToDoItemProvider))).SetUserId(_userManager.GetUserId(User));
             }
             else
             {
-                _typeOfModeDataSaver = "memory";
+                _typeOfToDoItemProvider = TypeOfToDoItemProvider.Memory;
             }
 
             ViewBag.EditId = TempData["EditId"];
+            ViewBag.ListState = _listState;
 
-            var model = _providerFactory.GetProvider(_typeOfModeDataSaver).ToDoItems;
+            var model = _providerFactory.GetProvider(_typeOfToDoItemProvider).ToDoItems;
 
             switch (_listState)
             {
                 case ListState.Active:
-                    model = _providerFactory.GetProvider(_typeOfModeDataSaver).ToDoItems.Where(i => !i.IsCompleted);
+                    model = _providerFactory.GetProvider(_typeOfToDoItemProvider).ToDoItems.Where(i => !i.IsCompleted);
                     break;
 
                 case ListState.Completed:
-                    model = _providerFactory.GetProvider(_typeOfModeDataSaver).ToDoItems.Where(i => i.IsCompleted);
+                    model = _providerFactory.GetProvider(_typeOfToDoItemProvider).ToDoItems.Where(i => i.IsCompleted);
                     break;
             }
 
             return View(model);
         }
-
 
         /////////////////////
         /// Возможно в этих 3-ёх методах нужно сделать return View("Index", model),
@@ -108,7 +112,7 @@ namespace ToDoList.Controllers
         {
             var referer = Request.Headers["Referer"];
 
-            _providerFactory.GetProvider(_typeOfModeDataSaver).EditToDoItemMessage(newTodoItem.Id, newTodoItem.Item);
+            _providerFactory.GetProvider(_typeOfToDoItemProvider).EditToDoItemMessage(newTodoItem.Id, newTodoItem.Item);
 
 
             return RedirectToAction(nameof(Index));
@@ -120,7 +124,7 @@ namespace ToDoList.Controllers
             // Просто чтобы бы не пустой Item
             if (ModelState.IsValid)
             {
-                _providerFactory.GetProvider(_typeOfModeDataSaver).AddToDoItem(newItem);
+                _providerFactory.GetProvider(_typeOfToDoItemProvider).AddToDoItem(newItem);
             }
 
             return RedirectToAction(nameof(Index));
@@ -129,14 +133,14 @@ namespace ToDoList.Controllers
         [HttpPost]
         public IActionResult DeleteToDoItem(long id)
         {
-            _providerFactory.GetProvider(_typeOfModeDataSaver).DeleteDoItem(id);
+            _providerFactory.GetProvider(_typeOfToDoItemProvider).DeleteDoItem(id);
             return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
         public IActionResult ChangeToDoItemStatus(long id)
         {
-            _providerFactory.GetProvider(_typeOfModeDataSaver).ChangeStatus(id);
+            _providerFactory.GetProvider(_typeOfToDoItemProvider).ChangeStatus(id);
             return RedirectToAction(nameof(Index));
         }
     }

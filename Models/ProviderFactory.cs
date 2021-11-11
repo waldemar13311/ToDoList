@@ -2,26 +2,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ToDoList.Models.ViewModels;
 
 namespace ToDoList.Models
 {
     public class ProviderFactory
     {
-        private readonly IServiceProvider provider;
+        private readonly IServiceProvider _provider;
 
         public ProviderFactory(IServiceProvider provider)
         {
-            this.provider = provider;
+            this._provider = provider;
         }
 
-        public IToDoItemProvider GetProvider(string typeOfProvider)
+        public IToDoItemProvider GetProvider(TypeOfToDoItemProvider typeOfProvider)
         {
-            if (typeOfProvider == "memory")
+            switch (typeOfProvider)
             {
-                return (IToDoItemProvider) provider.GetService(typeof(ToDoItemMemoryProvider));
-            }
+                case TypeOfToDoItemProvider.Memory:
+                    return (IToDoItemProvider)_provider.GetService(typeof(ToDoItemMemoryProvider));
 
-            return (IToDoItemProvider) provider.GetService(typeof(ToDoItemMsSqlProvider));
+                case TypeOfToDoItemProvider.MsSql:
+                    return (IToDoItemProvider) _provider.GetService(typeof(ToDoItemMsSqlProvider));
+
+                default:
+                    return null;
+            }
         }
     }
 }

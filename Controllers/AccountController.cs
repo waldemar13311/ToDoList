@@ -13,13 +13,13 @@ namespace ToDoList.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        private UserManager<User> userManager;
-        private SignInManager<User> signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
 
         public AccountController(UserManager<User> userMgr, SignInManager<User> signInMgr)
         {
-            userManager = userMgr;
-            signInManager = signInMgr;
+            _userManager = userMgr;
+            _signInManager = signInMgr;
         }
 
         [AllowAnonymous]
@@ -38,13 +38,13 @@ namespace ToDoList.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await userManager.FindByNameAsync(dataFromUser.Login);
+                var user = await _userManager.FindByNameAsync(dataFromUser.Login);
 
                 if (user != null)
                 {
-                    await signInManager.SignOutAsync();
+                    await _signInManager.SignOutAsync();
 
-                    var result = await signInManager.PasswordSignInAsync(
+                    var result = await _signInManager.PasswordSignInAsync(
                         user,
                         dataFromUser.Password,
                         false,

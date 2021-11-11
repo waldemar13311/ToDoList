@@ -9,8 +9,8 @@ namespace ToDoList.Models
 {
     public class ToDoItemMsSqlProvider : IToDoItemProvider
     {
-        private UserDbContext _context;
-        private string _userId;
+        private readonly UserDbContext _context;
+        private static string _userId;
 
         public ToDoItemMsSqlProvider(UserDbContext ctx)
         {
@@ -32,17 +32,23 @@ namespace ToDoList.Models
 
         public void EditToDoItemMessage(long id, string newMessage)
         {
-            throw new NotImplementedException();
+            var toDoItem = _context.ToDoItems.Find(id);
+            toDoItem.Item = newMessage;
+            _context.SaveChanges();
         }
 
         public void ChangeStatus(long id)
         {
-            throw new NotImplementedException();
+            var toDoItem = _context.ToDoItems.Find(id);
+            toDoItem.IsCompleted = !toDoItem.IsCompleted;
+            _context.SaveChanges();
         }
 
-        public bool DeleteDoItem(long id)
+        public void DeleteDoItem(long id)
         {
-            throw new NotImplementedException();
+            var toDoItem = _context.ToDoItems.Find(id);
+            _context.ToDoItems.Remove(toDoItem);
+            _context.SaveChanges();
         }
 
         public IEnumerable<ToDoItem> ToDoItems
