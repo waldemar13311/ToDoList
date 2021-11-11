@@ -12,7 +12,8 @@ namespace ToDoList.Models
         public UserDbContext(DbContextOptions<UserDbContext> options)
             : base(options)
         {
-
         }
+
+        public DbSet<ToDoItem> ToDoItems { get; set; }
     }
 }

@@ -13,14 +13,23 @@ namespace ToDoList.Controllers
     {
         private UserManager<User> _userManager;
         private SignInManager<User> _signInManager;
-        private IToDoItemProvider _toDoItemProvider;
+        private static IToDoItemProvider _toDoItemProvider;
+        private UserDbContext context;
+
+        private ProviderFactory providerFactory;
+
         private static ListState listState = ListState.All;
 
-        public HomeController(UserManager<User> userManager, SignInManager<User> signInManager, IToDoItemProvider toDoItemProvider)
+        public HomeController(
+            UserManager<User> userManager, 
+            SignInManager<User> signInManager,
+            ProviderFactory providerFactory, UserDbContext context
+            )
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _toDoItemProvider = toDoItemProvider;
+            this.providerFactory = providerFactory;
+            this.context = context;
         }
 
         public IActionResult LogOut()
@@ -35,6 +44,18 @@ namespace ToDoList.Controllers
             if (user != null)
             {
                 ViewBag.UserName = user;
+
+                // Тут должно быть получение ToDoItemMsSqlProvider
+                _toDoItemProvider = providerFactory.GetProvider("mssql");
+                ((ToDoItemMsSqlProvider)_toDoItemProvider).SetUserId(_userManager.GetUserId(User));
+
+                // TODO ПРПРОБОВАТЬ СДЕЛАТЬ ПОЛУЧЕНИЕ DBCONTEXT В ФАБРИКЕ
+                ((ToDoItemMsSqlProvider)_toDoItemProvider).SetUserDbContext(context);
+            }
+            else
+            {
+                // Тут должно быть получение ToDoItemMemoryProvider
+                _toDoItemProvider = providerFactory.GetProvider("memory");
             }
 
             ViewBag.EditId = TempData["EditId"];
@@ -104,9 +125,8 @@ namespace ToDoList.Controllers
         {
             // Просто чтобы бы не пустой Item
             if (ModelState.IsValid)
-            {
+            { 
                 _toDoItemProvider.AddToDoItem(newItem);
-
             }
 
             return RedirectToAction(nameof(Index));

@@ -15,6 +15,6 @@ namespace ToDoList.Models
         public bool IsCompleted { get; set; }
 
         public string UserId { get; set; }
-        public User User { get; set; }
+        //public User User { get; set; }
     }
 }

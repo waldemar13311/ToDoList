@@ -28,8 +28,10 @@ namespace ToDoList
             var connectionString = Configuration["ToDoList:ConnectionString"];
 
             services.AddDbContext<UserDbContext>(
-                options => options.UseSqlServer(connectionString)
+                options => options.UseSqlServer(
+                    connectionString)
             );
+
 
             services.AddIdentity<User, IdentityRole>(options =>
                 {
@@ -43,12 +45,26 @@ namespace ToDoList
                 .AddEntityFrameworkStores<UserDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddSingleton<IToDoItemProvider, ToDoItemMemoryProvider>();
+            services.AddTransient<ProviderFactory>();
+            services.AddTransient<UserDbContext>();
+
+            services
+                .AddSingleton<ToDoItemMemoryProvider>()
+                .AddSingleton<IToDoItemProvider, ToDoItemMemoryProvider>(s => s.GetService<ToDoItemMemoryProvider>());
+
+            services
+                .AddTransient<ToDoItemMsSqlProvider>()
+                .AddTransient<IToDoItemProvider, ToDoItemMsSqlProvider>(s => s.GetService<ToDoItemMsSqlProvider>());
+
+
+
+            //services.AddTransient<IToDoItemProvider, ToDoItemMainProvider>();
+            //services.AddSingleton<IToDoItemProvider, ToDoItemMemoryProvider>();
 
             services.AddMvc(options => options.EnableEndpointRouting = false);
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserDbContext context)
         {
             if (env.IsDevelopment())
             {

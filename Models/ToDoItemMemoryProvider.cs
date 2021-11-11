@@ -38,13 +38,13 @@ namespace ToDoList.Models
             return _toDoItems.Remove(_toDoItems[i]);
         }
 
-        public IQueryable<ToDoItem> ToDoItems
+        public IEnumerable<ToDoItem> ToDoItems
         {
             get
             {
                 var counter = 0;
                 _toDoItems.ForEach( i => i.Id = counter++);
-                return _toDoItems.AsQueryable();
+                return _toDoItems.AsEnumerable();
             }
         }
     }
