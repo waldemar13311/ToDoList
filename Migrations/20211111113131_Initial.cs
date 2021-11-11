@@ -47,6 +47,21 @@ namespace ToDoList.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ToDoItems",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Item = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsCompleted = table.Column<bool>(type: "bit", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ToDoItems", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -208,6 +223,9 @@ namespace ToDoList.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "ToDoItems");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

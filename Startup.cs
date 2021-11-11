@@ -45,18 +45,19 @@ namespace ToDoList
                 .AddEntityFrameworkStores<UserDbContext>()
                 .AddDefaultTokenProviders();
 
+            //services.AddTransient<IToDoItemProvider, ToDoItemMsSqlProvider>();
+
             services.AddTransient<ProviderFactory>();
-            services.AddTransient<UserDbContext>();
-
+            //
             services
-                .AddSingleton<ToDoItemMemoryProvider>()
-                .AddSingleton<IToDoItemProvider, ToDoItemMemoryProvider>(s => s.GetService<ToDoItemMemoryProvider>());
-
+                .AddTransient<ToDoItemMemoryProvider>()
+                .AddTransient<IToDoItemProvider, ToDoItemMemoryProvider>(s => s.GetService<ToDoItemMemoryProvider>());
+            
             services
                 .AddTransient<ToDoItemMsSqlProvider>()
                 .AddTransient<IToDoItemProvider, ToDoItemMsSqlProvider>(s => s.GetService<ToDoItemMsSqlProvider>());
 
-
+            //services.AddTransient<IToDoItemProvider, ToDoItemMsSqlProvider>();
 
             //services.AddTransient<IToDoItemProvider, ToDoItemMainProvider>();
             //services.AddSingleton<IToDoItemProvider, ToDoItemMemoryProvider>();

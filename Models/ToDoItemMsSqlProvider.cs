@@ -12,7 +12,7 @@ namespace ToDoList.Models
         private UserDbContext _context;
         private string _userId;
 
-        public void SetUserDbContext(UserDbContext ctx)
+        public ToDoItemMsSqlProvider(UserDbContext ctx)
         {
             _context = ctx;
         }
@@ -26,8 +26,6 @@ namespace ToDoList.Models
         {
             newItem.UserId = _userId;
 
-            // TODO ВОТ ТУТ ОШИБКА. ЧТО С НЕЙ ДЕЛАТЬ НЕ ЗНАЮ
-            // TODO СОЗДАМ КОММИТ, ПОПРОБУЮ ПЕРЕПИСАТЬ КОД
             _context.ToDoItems.Add(newItem);
             _context.SaveChanges();
         }
@@ -49,10 +47,7 @@ namespace ToDoList.Models
 
         public IEnumerable<ToDoItem> ToDoItems
         {
-            get
-            {
-                return _context.ToDoItems;
-            }
+            get { return _context.ToDoItems.Where(item => item.UserId == _userId).ToArray(); }
         }
     }
 }

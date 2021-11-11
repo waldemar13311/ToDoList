@@ -8,7 +8,7 @@ namespace ToDoList.Models
 {
     public class ToDoItemMemoryProvider : IToDoItemProvider
     {
-        private List<ToDoItem> _toDoItems = new List<ToDoItem>();
+        private static List<ToDoItem> _toDoItems = new List<ToDoItem>();
 
         public void AddToDoItem(ToDoItem newItem)
         {

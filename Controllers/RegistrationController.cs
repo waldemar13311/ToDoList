@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using ToDoList.Models;
+using ToDoList.Models.ViewModels;
 
 namespace ToDoList.Controllers
 {

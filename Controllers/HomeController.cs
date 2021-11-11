@@ -6,30 +6,29 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using ToDoList.Models;
+using ToDoList.Models.ViewModels;
 
 namespace ToDoList.Controllers
 {
     public class HomeController : Controller
     {
-        private UserManager<User> _userManager;
-        private SignInManager<User> _signInManager;
-        private static IToDoItemProvider _toDoItemProvider;
-        private UserDbContext context;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly ProviderFactory _providerFactory;
 
-        private ProviderFactory providerFactory;
-
-        private static ListState listState = ListState.All;
+        private static ListState _listState = ListState.All;
+        private static string _typeOfModeDataSaver = "memory";
 
         public HomeController(
             UserManager<User> userManager, 
             SignInManager<User> signInManager,
-            ProviderFactory providerFactory, UserDbContext context
+            ProviderFactory providerFactory
             )
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            this.providerFactory = providerFactory;
-            this.context = context;
+
+            _providerFactory = providerFactory;
         }
 
         public IActionResult LogOut()
@@ -41,35 +40,30 @@ namespace ToDoList.Controllers
         public IActionResult Index()
         {
             var user = _userManager.GetUserName(User);
+
             if (user != null)
             {
                 ViewBag.UserName = user;
-
-                // Тут должно быть получение ToDoItemMsSqlProvider
-                _toDoItemProvider = providerFactory.GetProvider("mssql");
-                ((ToDoItemMsSqlProvider)_toDoItemProvider).SetUserId(_userManager.GetUserId(User));
-
-                // TODO ПРПРОБОВАТЬ СДЕЛАТЬ ПОЛУЧЕНИЕ DBCONTEXT В ФАБРИКЕ
-                ((ToDoItemMsSqlProvider)_toDoItemProvider).SetUserDbContext(context);
+                _typeOfModeDataSaver = "mssql";
+                ((ToDoItemMsSqlProvider)(_providerFactory.GetProvider(_typeOfModeDataSaver))).SetUserId(_userManager.GetUserId(User));
             }
             else
             {
-                // Тут должно быть получение ToDoItemMemoryProvider
-                _toDoItemProvider = providerFactory.GetProvider("memory");
+                _typeOfModeDataSaver = "memory";
             }
 
             ViewBag.EditId = TempData["EditId"];
 
-            var model = _toDoItemProvider.ToDoItems;
+            var model = _providerFactory.GetProvider(_typeOfModeDataSaver).ToDoItems;
 
-            switch (listState)
+            switch (_listState)
             {
                 case ListState.Active:
-                    model = _toDoItemProvider.ToDoItems.Where(i => !i.IsCompleted);
+                    model = _providerFactory.GetProvider(_typeOfModeDataSaver).ToDoItems.Where(i => !i.IsCompleted);
                     break;
 
                 case ListState.Completed:
-                    model = _toDoItemProvider.ToDoItems.Where(i => i.IsCompleted);
+                    model = _providerFactory.GetProvider(_typeOfModeDataSaver).ToDoItems.Where(i => i.IsCompleted);
                     break;
             }
 
@@ -82,21 +76,21 @@ namespace ToDoList.Controllers
         /// чтобы в URL было видно ALL Completed и Active
         public IActionResult OnlyActiveToDoItems()
         {
-            listState = ListState.Active;
+            _listState = ListState.Active;
 
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult OnlyCompletedToDoItems()
         {
-            listState = ListState.Completed;
+            _listState = ListState.Completed;
 
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult AllToDoItems()
         {
-            listState = ListState.All;
+            _listState = ListState.All;
 
             return RedirectToAction(nameof(Index));
         }
@@ -114,7 +108,7 @@ namespace ToDoList.Controllers
         {
             var referer = Request.Headers["Referer"];
 
-            _toDoItemProvider.EditToDoItemMessage(newTodoItem.Id, newTodoItem.Item);
+            _providerFactory.GetProvider(_typeOfModeDataSaver).EditToDoItemMessage(newTodoItem.Id, newTodoItem.Item);
 
 
             return RedirectToAction(nameof(Index));
@@ -125,8 +119,8 @@ namespace ToDoList.Controllers
         {
             // Просто чтобы бы не пустой Item
             if (ModelState.IsValid)
-            { 
-                _toDoItemProvider.AddToDoItem(newItem);
+            {
+                _providerFactory.GetProvider(_typeOfModeDataSaver).AddToDoItem(newItem);
             }
 
             return RedirectToAction(nameof(Index));
@@ -135,14 +129,14 @@ namespace ToDoList.Controllers
         [HttpPost]
         public IActionResult DeleteToDoItem(long id)
         {
-            _toDoItemProvider.DeleteDoItem(id);
+            _providerFactory.GetProvider(_typeOfModeDataSaver).DeleteDoItem(id);
             return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
         public IActionResult ChangeToDoItemStatus(long id)
         {
-            _toDoItemProvider.ChangeStatus(id);
+            _providerFactory.GetProvider(_typeOfModeDataSaver).ChangeStatus(id);
             return RedirectToAction(nameof(Index));
         }
     }
