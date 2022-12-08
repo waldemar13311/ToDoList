@@ -1,51 +1,53 @@
 ﻿@model ToDoList.Models.ViewModels.SignInUserModel
 
 @{
-    Layout = "_EnterLayout";
+    Layout = "_Layout";
 }
 
-    <div class="limiter">
-        <div class="container-login100">
-            <div class="wrap-login100 p-l-85 p-r-85 p-t-55 p-b-55">
-                <form class="login100-form" asp-controller="Account" asp-action="Login" method="post" >
-                    <p class="p-b-32">
-                        <span class="login100-form-title">
-                            Sign in
-                        </span>
-                        <a asp-controller="Registration" asp-action="Index">
-                            Or create account
-                        </a>
-                    </p>
+<div class="container-login100">
+    <div class="wrap-login100 p-l-5 p-r-5 p-t-3 p-b-3">
+        <form class="login100-form flex-sb flex-w" asp-controller="Account" asp-action="Login" method="post" >
+        
+            <div class="width100 m-b-1">
+                <span class="login100-form-title flex-container">
+                    Sign in
+                </span>
 
-                    <span class="txt1 p-b-11">
-                        Login
-                    </span>
-                    <span asp-validation-for="Login" class="text-danger flex-sb flex-w"></span>
-                    @if (ViewData.ModelState["SignInErr"] != null)
-                    {
-                        var signInErrErrorMessage = ViewData.ModelState["SignInErr"].Errors[0].ErrorMessage;
-                        <span class="text-danger flex-sb flex-w">@signInErrErrorMessage</span>
-                    }
-                    <div class="wrap-input100 validate-input m-b-36">
-                        <input class="input100" asp-for="Login">
-                    </div>
-
-                    <span class="txt1 p-b-11">
-                        Password
-                    </span>
-                    <span asp-validation-for="Password" class="text-danger flex-sb flex-w"></span>
-                    <div class="wrap-input100 validate-input m-b-12">
-                        <input class="input100" asp-for="Password">
-                    </div>
-
-                    <div class="container-login100-form-btn">
-                        <button class="login100-form-btn">
-                            Login
-                        </button>
-                    </div>
-
-                </form>
+                <a asp-controller="Registration" asp-action="Index">
+                    Or create account
+                </a>
             </div>
-        </div>
-    </div>
 
+
+            <span class="txt1 p-b-10">
+                Login
+            </span>
+            <span asp-validation-for="Login" class="text-danger p-b-10"></span>
+            @if (ViewData.ModelState["SignInErr"] != null)
+            {
+                var signInErrErrorMessage = ViewData.ModelState["SignInErr"].Errors[0].ErrorMessage;
+                <span class="text-danger p-b-10">@signInErrErrorMessage</span>
+            }
+            <div class="wrap-input100 m-b-25">
+                <input class="input100" asp-for="Login">
+            </div>
+
+
+            <span class="txt1 p-b-10">
+                Password
+            </span>
+            <span asp-validation-for="Password" class="text-danger flex-sb flex-w p-b-10"></span>
+            <div class="wrap-input100 m-b-20">
+                <input class="input100" asp-for="Password">
+            </div>
+
+
+            <div>
+                <button class="btn">
+                    <span class="text-in-btn">Login</span>
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>

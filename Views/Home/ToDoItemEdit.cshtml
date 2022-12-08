@@ -1,15 +1,19 @@
 ﻿@model ToDoItem
 
-<form id="editToDoItemForm" class="col" asp-action="EditToDoItem" method="post">
+<form id="editToDoItemForm" class="wrap-input100 m-l-1 m-r-1" asp-action="EditToDoItem" method="post">
     <input type="hidden" asp-for="Id"/>
-    <input asp-for="Item" type="text" class="form-control">
+    <input asp-for="Item" type="text" class="input100">
 </form>
 
-    <div class="col col-lg-auto">
-        <a onclick="getElementById('editToDoItemForm').submit()" style="cursor: pointer"><i class="far fa-save" style="color: #212529; font-size: 1.2em"></i></a>
-    </div>
+<div class="to-center m-r-1">
+    <a onclick="getElementById('editToDoItemForm').submit()">
+        <i class="far fa-save icon"></i>
+    </a>
+</div>
 
-    <div class="col col-lg-auto">
-        <a asp-action="Index"><i class="fa fa-ban" style="color: #212529; font-size: 1.2em"></i></a>
-    </div>
+<div class="to-center" style="margin-right: 0.35em;">
+    <a asp-action="Index">
+        <i class="fa fa-ban icon-cancel"></i>
+    </a>
+</div>
         
