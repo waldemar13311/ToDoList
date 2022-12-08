@@ -1,126 +1,12 @@
 ﻿@model IEnumerable<ToDoItem>
 
 @{
-    Layout = null;
+    Layout = "_Layout";
 }
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width">
-    <link rel="stylesheet" type="text/css" href="~/lib/bootstrap/css/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="~/lib/font-awesome/css/all.css" />
-    <title>Document</title>
-    <style>
-        body {
-            margin-top: 20px;
-            background: #f8f8f8;
-        }
-
-        .todo-nav {
-            margin-top: 10px
-        }
-
-        .todo-list {
-            margin: 10px 0
-        }
-
-        .todo-list .todo-item {
-            padding: 15px;
-            margin: 5px 0;
-            border-radius: 0;
-            background: #f7f7f7
-        }
-
-        .todo-list.only-active .todo-item.complete {
-            display: none
-        }
-
-        .todo-list.only-active .todo-item:not(.complete) {
-            display: block
-        }
-
-        .todo-list.only-complete .todo-item:not(.complete) {
-            display: none
-        }
-
-        .todo-list.only-complete .todo-item.complete {
-            display: block
-        }
-
-        .todo-list .todo-item.complete span {
-            text-decoration: line-through
-        }
-
-        .remove-todo-item {
-            color: #ccc;
-            visibility: hidden
-        }
-
-        .remove-todo-item:hover {
-            color: #5f5f5f
-        }
-
-        .todo-item:hover .remove-todo-item {
-            visibility: visible
-        }
-
-        div.checker {
-            width: 18px;
-            height: 18px
-        }
-
-        div.checker input,
-        div.checker span {
-            width: 18px;
-            height: 18px
-        }
-
-        div.checker span {
-            display: -moz-inline-box;
-            display: inline-block;
-            zoom: 1;
-            text-align: center;
-            background-position: 0 -260px;
-        }
-
-        div.checker, div.checker input, div.checker span {
-            width: 19px;
-            height: 19px;
-        }
-
-        div.checker, div.radio, div.uploader {
-            position: relative;
-        }
-
-        div.button, div.button *, div.checker, div.checker *, div.radio, div.radio *, div.selector, div.selector *, div.uploader, div.uploader * {
-            margin: 0;
-            padding: 0;
-        }
-
-        div.button, div.checker, div.radio, div.selector, div.uploader {
-            display: -moz-inline-box;
-            display: inline-block;
-            zoom: 1;
-            vertical-align: middle;
-        }
-
-        .card {
-            padding: 25px;
-            margin-bottom: 20px;
-            border: initial;
-            background: #fff;
-            border-radius: calc(.15rem - 1px);
-            box-shadow: 0 1px 15px rgba(0,0,0,0.04), 0 1px 6px rgba(0,0,0,0.04);
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <div class="row align-items-start">
-        <div class="col align-self-start">
+<div class="m-3">
+    <div class="flex-container header-padding">
+        <div class="head-item-mode">
             @if (ViewBag.UserName != null)
             {
                 <nav>
@@ -136,117 +22,128 @@
             }
         </div>
 
-        <div class="col">
-            <div class="p-1 h1 text-dark text-center mx-auto">
+        <div class="head-item-logo">
+            <div class="logo-container">
                 <i class="fa fa-check bg-dark text-white rounded p-2"></i>
                 <u>ToDoList</u>
             </div>
         </div>
-        
-        <div class="p-2 m-1 col align-self-end">
-            <div class="form-inline float-end">
-                @if (ViewBag.UserName != null)
-                {
-                    <a class="btn btn-outline-dark" asp-controller="Home" asp-action="LogOut">Log Out</a>
-                }
-                else
-                {
-                    <a class="btn btn-outline-dark" asp-controller="Account" asp-action="Login">Log In</a>
-                    <a class="btn btn-outline-secondary" asp-controller="Registration" asp-action="Index">Sign Up</a>
-                }
-            </div>
+    
+        <div class="flex-container head-item-button">
+            @if (ViewBag.UserName != null)
+            {
+                @*<a class="btn btn-outline-dark" asp-controller="Home" asp-action="LogOut">Log Out</a>*@
+
+                <form class="p-r-1" method="get" asp-controller="Home" asp-action="LogOut">
+                    <button class="btn">
+                        <span class="text-in-btn">Log in</span>
+                    </button>
+                </form>
+            }
+            else
+            {
+                <form class="p-r-1" method="get" asp-controller="Account" asp-action="Login">
+                    <button class="btn">
+                        <span class="text-in-btn">Log in</span>
+                    </button>
+                </form>
+
+                <form class="p-r-1" method="get" asp-controller="Registration" asp-action="Index">
+                    <button class="btn">
+                        <span class="text-in-btn">Sign Up</span>
+                    </button>
+                </form>
+            }
         </div>
     </div>
 
-    <div class="col-md-auto">
-        <div class="card">
-            <div class="card-body">
 
-                <form method="post" asp-controller="Home" asp-action="AddToDoItem">
-                    @Html.Partial("NewToDoItemAdd", new ToDoItem())
-                </form>
-                    <ul class="nav nav-pills todo-nav">
-                        <li role="presentation" class="nav-item">
-                            @if (ViewBag.ListState == ListState.All)
-                            {
-                                <a asp-action="AllToDoItems" class="btn btn-secondary">All</a>
-                            }
-                            else
-                            {
-                                <a asp-action="AllToDoItems" class="nav-link text-dark text-decoration-underline">All</a>
-                            }
-                        </li>
-                        <li role="presentation" class="nav-item">
-                            @if (ViewBag.ListState == ListState.Active)
-                            {
-                                <a asp-action="OnlyActiveToDoItems" class="btn btn-secondary">Active</a>
-                            }
-                            else
-                            {
-                                <a asp-action="OnlyActiveToDoItems" class="nav-link text-dark text-decoration-underline">Active</a>
-                            }
-                        </li>
-                        <li role="presentation" class="nav-item">
-                            @if (ViewBag.ListState == ListState.Completed)
-                            {
-                                <a asp-action="OnlyCompletedToDoItems" class="btn btn-secondary">Completed</a>
-                            }
-                            else
-                            {
-                                <a asp-action="OnlyCompletedToDoItems" class="nav-link text-dark text-decoration-underline">Completed</a>
-                            }
-                        </li>
-                    </ul>
 
-                    <div class="todo-list">
-                        
-                        @foreach (var toDoItem in Model)
+    <div class="flex-container">
+        <div class="white-panel">
+            
+            @Html.Partial("NewToDoItemAdd", new ToDoItem())
+
+            <div>
+                <ul>
+                    <li>
+                        @if (ViewBag.ListState == ListState.All)
                         {
-                        <div class="todo-item">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-1 col-lg-auto">
-                                        <form asp-action="ChangeToDoItemStatus" method="post">
-                                            <div class="checker">
-                                                <input type="hidden" name="Id" value="@toDoItem.Id" />
-                                                <input type="checkbox" checked="@toDoItem.IsCompleted" onclick="this.parentNode.parentNode.submit()">
-                                            </div>
-                                        </form>
-                                    </div>
-                                    
-                                    @if (ViewBag.EditId != null && toDoItem.Id == ViewBag.EditId)
-                                    {
-                                        @Html.Partial("ToDoItemEdit", toDoItem)
-                                    }
-                                    else
-                                    {
-                                        <div class="col">
-                                            @{
-                                                var style = @toDoItem.IsCompleted ? "font-size: 1.2em; text-decoration: line-through;" : "font-size: 1.2em;";
-                                            }
-                                            <span style="@style">@toDoItem.Item</span>
-                                        </div>
+                            <a asp-action="AllToDoItems" class="cheched-a">All</a>
+                        }
+                        else
+                        {
+                            <a asp-action="AllToDoItems">All</a>
+                        }
+                    </li>
+                    <li>
+                        @if (ViewBag.ListState == ListState.Active)
+                        {
+                            <a asp-action="OnlyActiveToDoItems" class="cheched-a">Active</a>
+                        }
+                        else
+                        {
+                            <a asp-action="OnlyActiveToDoItems">Active</a>
+                        }
+                    </li>
+                    <li>
+                        @if (ViewBag.ListState == ListState.Completed)
+                        {
+                            <a asp-action="OnlyCompletedToDoItems" class="cheched-a">Completed</a>
+                        }
+                        else
+                        {
+                            <a asp-action="OnlyCompletedToDoItems">Completed</a>
+                        }
+                    </li>
+                </ul>
+            </div>
 
-                                        <div class="col col-lg-auto">
-                                            <a asp-action="EditToDoItem" asp-route-id="@toDoItem.Id" ><i class="fas fa-edit" style="color: #212529; font-size: 1.2em"></i></a>
-                                        </div>
-
-                                        <div class="col col-lg-auto">
-                                            <form asp-action="DeleteToDoItem" method="post">
-                                                <input type="hidden" name="Id" value="@toDoItem.Id"/>
-                                                <a onclick="this.parentNode.submit()" style="cursor: pointer"><i class="fas fa-times" style="color: #212529; font-size: 1.2em"></i></a>
-                                            </form>
-                                        </div>
-                                    }
+            <div>
+                @foreach (var toDoItem in Model)
+                {
+                    <div class="todo-item flex-container">
+                        <div class="to-center">
+                            <form asp-action="ChangeToDoItemStatus" method="post">
+                                <div class="checker">
+                                    <input type="hidden" name="Id" value="@toDoItem.Id" />
+                                    <input type="checkbox" checked="@toDoItem.IsCompleted" onclick="this.parentNode.parentNode.submit()" class="my-checkbox">
                                 </div>
-                            </div>
+                            </form>
                         </div>
+                                    
+                        @if (ViewBag.EditId != null && toDoItem.Id == ViewBag.EditId)
+                        {
+                            @Html.Partial("ToDoItemEdit", toDoItem)
+                        }
+                        else
+                        {
+                            <div class="to-center width100 m-l-1">
+                                @{
+                                    var style = @toDoItem.IsCompleted ? "text-decoration: line-through;" : "";
+                                }
+                                <span class="item-label" style="@style">@toDoItem.Item</span>
+                            </div>
+                            
+                            <div class="to-center m-r-1">
+                                <a asp-action="EditToDoItem" asp-route-id="@toDoItem.Id" >
+                                    <i class="fas fa-edit icon"></i>
+                                </a>
+                            </div>
+                            
+                            <div class="to-center" style="margin-right: 0.8em;">
+                                <form asp-action="DeleteToDoItem" method="post">
+                                    <input type="hidden" name="Id" value="@toDoItem.Id"/>
+                                    <a onclick="this.parentNode.submit()">
+                                        <i class="fas fa-times icon-cancel"></i>
+                                    </a>
+                                </form>
+                            </div>
                         }
                     </div>
+                }
             </div>
         </div>
-    </div>
 
 </div>
-</body>
-</html>
+</div>

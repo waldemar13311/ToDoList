@@ -1,24 +1,26 @@
 ﻿@model string
 
 @{
-    Layout = "_EnterLayout";
+    Layout = "_Layout";
 }
 
-<div class="limiter">
-    <div class="container-login100">
-        <div class="wrap-login100 p-l-85 p-r-85 p-t-55 p-b-55">
+<div class="container-login100">
+    <div class="wrap-login100 p-l-5 p-r-5 p-t-3 p-b-3">
+        <div class="width100 flex-sb flex-w">
 
-            <span class="login100-form-title p-b-32 container">
+            <span class="login100-form-title">
                 Success!
             </span>
-            
-            <div class="container">
+        
+            <div class="p-t-5px">
                 Your @Model account has been created
             </div>
-            
-            <div class="container">
-                <a class="btn btn-secondary" asp-controller="Account" asp-action="Login">Sign in</a>
-            </div>
+        
+            <form class="width100 p-t-1" method="get" asp-controller="Account" asp-action="Login">
+                <button class="btn">
+                    <span class="text-in-btn">Sign in</span>
+                </button>
+            </form>
 
         </div>
     </div>

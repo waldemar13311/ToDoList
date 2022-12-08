@@ -36,6 +36,8 @@ namespace ToDoList.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(SignInUserModel dataFromUser, string returnUrl)
         {
+            ViewBag.Title = "Sign in";
+
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByNameAsync(dataFromUser.Login);

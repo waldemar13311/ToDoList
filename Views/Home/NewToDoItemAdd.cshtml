@@ -1,13 +1,12 @@
 ﻿@model ToDoItem
 
-
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <input asp-for="Item" type="text" class="form-control" placeholder="New Task...">
-        </div>
-        <div class="col-md-auto">
-            <button type="submit" class="btn btn-dark">Add</button>
-        </div>
+<form method="post" asp-controller="Home" asp-action="AddToDoItem" class="flex-container">
+    <div class="wrap-input100 m-r-1">
+        <input asp-for="Item" type="text" class="input100" placeholder="New Task...">
     </div>
-</div>
+
+    <button class="btn" type="submit">
+        <span class="text-in-btn">Add</span>
+    </button>
+</form>
+
