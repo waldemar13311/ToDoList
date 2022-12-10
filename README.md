@@ -1,4 +1,9 @@
 ﻿# ToDoList
+<p>
+    <h1 align="center">
+        ✔ <span style="text-decoration: underline">ToDoList</span>
+    </h1>
+</p>
 
 Hello, everyone 👋 !
 
@@ -18,4 +23,4 @@ It have two modes:
 ### 2. Second log in and save the items in your account
 ![](gif/Account%20mode.gif)
 
-Thank you for watching 🥰 and good luck in programing 😉!
+Thank you for watching 🥰 and good luck 😉!

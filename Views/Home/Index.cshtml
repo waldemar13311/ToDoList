@@ -22,13 +22,16 @@
             }
         </div>
 
-        <div class="head-item-logo">
-            <div class="logo-container">
-                <i class="fa fa-check bg-dark text-white rounded p-2"></i>
-                <u>ToDoList</u>
+        @{
+            var logoPosition = ViewBag.UserName != null ? "logo-position-center" : "logo-position-left"; 
+            <div class="head-item-logo @logoPosition">
+                <div class="logo-container">
+                    <i class="fa fa-check bg-dark text-white rounded p-2"></i>
+                    <u>ToDoList</u>
+                </div>
             </div>
-        </div>
-    
+        }
+
         <div class="flex-container head-item-button">
             @if (ViewBag.UserName != null)
             {
@@ -36,7 +39,7 @@
 
                 <form class="p-r-1" method="get" asp-controller="Home" asp-action="LogOut">
                     <button class="btn">
-                        <span class="text-in-btn">Log in</span>
+                        <span class="text-in-btn">Log out</span>
                     </button>
                 </form>
             }

@@ -292,7 +292,7 @@ li {
 }
 
 .head-item-mode {
-    flex-grow: 1;
+    flex-grow: 3;
 }
 
 .head-item-logo {
@@ -313,9 +313,15 @@ h1 {
 
 .logo-container {
     font-size: 3em;
-    text-align: center;
 }
 
+.logo-position-left {
+    text-align: left;
+}
+
+.logo-position-center {
+    text-align: center;
+}
 
 .header-padding {
     padding: 0.5em 0.0em;
